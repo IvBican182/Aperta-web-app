@@ -1,5 +1,4 @@
-﻿using Aperta_web_app.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
 namespace Aperta_web_app.Data

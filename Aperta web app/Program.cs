@@ -1,3 +1,4 @@
+using Aperta_web_app.Configurations;
 using Aperta_web_app.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        b => b.AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod());
+});
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Aperta_web_app.Models
+namespace Aperta_web_app.Data
 {
     public class User
     {
