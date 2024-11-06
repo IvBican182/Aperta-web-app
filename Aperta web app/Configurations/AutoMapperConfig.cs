@@ -12,6 +12,7 @@ namespace Aperta_web_app.Configurations
             CreateMap<Club, CreateClubDto>().ReverseMap();
             CreateMap<Club, GetClubsDto>().ReverseMap();
             CreateMap<Club, ClubDto>().ReverseMap();
+            CreateMap<Club, UpdateClubDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
 
         }

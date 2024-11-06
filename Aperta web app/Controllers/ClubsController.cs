@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Aperta_web_app.Data;
 using AutoMapper;
 using Aperta_web_app.Models.Club;
+using Aperta_web_app.Contracts;
 
 namespace Aperta_web_app.Controllers
 {
@@ -15,20 +16,23 @@ namespace Aperta_web_app.Controllers
     [ApiController]
     public class ClubsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        
         private readonly IMapper _mapper;
+        private readonly IClubsRepository _clubsRepository;
 
-        public ClubsController(AppDbContext context, IMapper mapper)
+        public ClubsController(IMapper mapper, IClubsRepository clubsRepository)
         {
-            _context = context;
-            this._mapper = mapper;
+            this._mapper = mapper; 
+            this._clubsRepository = clubsRepository;
+            
         }
+
 
         // GET: api/Clubs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Club>>> GetClubs()
         {
-            var clubs = await _context.Clubs.ToListAsync();
+            var clubs = await _clubsRepository.GetAllAsync();
             var clubRecords = _mapper.Map<List<GetClubsDto>>(clubs);
             return Ok(clubRecords);
         }
@@ -37,7 +41,7 @@ namespace Aperta_web_app.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ClubDto>> GetClub(int id)
         {
-            var club = await _context.Clubs.Include(q => q.Users).FirstOrDefaultAsync(q => q.Id == id);
+            var club = await _clubsRepository.GetClubDetails(id);
 
             if (club == null)
             {
@@ -52,22 +56,37 @@ namespace Aperta_web_app.Controllers
         // PUT: api/Clubs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClub(int id, Club club)
+        public async Task<IActionResult> PutClub(int id, UpdateClubDto updateClubDto)
         {
-            if (id != club.Id)
+            //If provided id is not equal to provided clubs id, throw a bad request
+            if (id != updateClubDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(club).State = EntityState.Modified;
+            //_context.Entry(updateClubDto).State = EntityState.Modified;
+
+            //fetch the club from database
+            var club = await _clubsRepository.GetAsync(id);
+
+            //If club is not found throw an error
+            if (club == null)
+            {  
+                return NotFound(); 
+            }
+
+            //takes whatever it needs from updateClubDto and updates the club with these values
+            //this tells entity framework we changed it to modified and we assigned values from left to right
+            _mapper.Map(updateClubDto, club);
 
             try
             {
-                await _context.SaveChangesAsync();
+                //update changes in database
+                await _clubsRepository.UpdateAsync(club);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClubExists(id))
+                if (!await ClubExists(id))
                 {
                     return NotFound();
                 }
@@ -86,9 +105,8 @@ namespace Aperta_web_app.Controllers
         public async Task<ActionResult<Club>> PostClub(CreateClubDto createClubDto)
         {
             var club = _mapper.Map<Club>(createClubDto);
-            _context.Clubs.Add(club);
-            await _context.SaveChangesAsync();
-
+            await _clubsRepository.AddAsync(club);
+            
             return CreatedAtAction("GetClub", new { id = club.Id }, club);
         }
 
@@ -96,21 +114,15 @@ namespace Aperta_web_app.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClub(int id)
         {
-            var club = await _context.Clubs.FindAsync(id);
-            if (club == null)
-            {
-                return NotFound();
-            }
-
-            _context.Clubs.Remove(club);
-            await _context.SaveChangesAsync();
+            
+            await _clubsRepository.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool ClubExists(int id)
+        private async Task<bool> ClubExists(int id)
         {
-            return _context.Clubs.Any(e => e.Id == id);
+            return await _clubsRepository.Exists(id);
         }
     }
 }

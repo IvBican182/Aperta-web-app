@@ -1,5 +1,7 @@
 using Aperta_web_app.Configurations;
+using Aperta_web_app.Contracts;
 using Aperta_web_app.Data;
+using Aperta_web_app.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IClubsRepository, ClubsRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -2,11 +2,9 @@
 
 namespace Aperta_web_app.Models.Club
 {
-    public class GetClubsDto
+    public class GetClubsDto : BaseClubDto
     {
         public int Id { get; set; }
-
-        public string Name { get; set; }
 
     }
 
