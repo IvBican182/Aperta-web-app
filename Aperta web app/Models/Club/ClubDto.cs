@@ -1,4 +1,4 @@
-﻿using Aperta_web_app.Models.User;
+﻿
 
 namespace Aperta_web_app.Models.Club
 {
@@ -22,6 +22,6 @@ namespace Aperta_web_app.Models.Club
 
         public required bool BillingInfo { get; set; }
 
-        public List<UserDto> Users { get; set; }
+        //public List<UserDto> Users { get; set; }
     }
 }

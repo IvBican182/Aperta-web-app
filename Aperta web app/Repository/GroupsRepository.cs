@@ -15,7 +15,7 @@ namespace Aperta_web_app.Repository
 
         public async Task<Group> GetGroupDetails(int id)
         {
-            return await _context.Groups.Include(q => q.Users).FirstOrDefaultAsync(q => q.Id == id);
+            return await _context.Groups.FirstOrDefaultAsync(q => q.Id == id);
         }
         
 

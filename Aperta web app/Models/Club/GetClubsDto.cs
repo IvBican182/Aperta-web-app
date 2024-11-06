@@ -1,4 +1,4 @@
-﻿using Aperta_web_app.Models.User;
+﻿
 
 namespace Aperta_web_app.Models.Club
 {

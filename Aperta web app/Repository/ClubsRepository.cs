@@ -14,7 +14,7 @@ namespace Aperta_web_app.Repository
 
         public async Task<Club> GetClubDetails(int id)
         {
-           return await _context.Clubs.Include(q => q.Users).FirstOrDefaultAsync(q => q.Id == id);
+           return await _context.Clubs.FirstOrDefaultAsync(q => q.Id == id);
         }
     }
 }

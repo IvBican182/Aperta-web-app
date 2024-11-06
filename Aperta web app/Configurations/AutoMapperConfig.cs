@@ -1,7 +1,6 @@
 ﻿using Aperta_web_app.Data;
 using Aperta_web_app.Models.Club;
 using Aperta_web_app.Models.Group;
-using Aperta_web_app.Models.User;
 using AutoMapper;
 
 namespace Aperta_web_app.Configurations
@@ -20,7 +19,7 @@ namespace Aperta_web_app.Configurations
             CreateMap<Group, GroupDto>().ReverseMap();
             CreateMap<Group, UpdateGroupDto>().ReverseMap();
 
-            CreateMap<User, UserDto>().ReverseMap();
+            
 
         }
     }
