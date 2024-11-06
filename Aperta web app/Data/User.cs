@@ -26,14 +26,14 @@ namespace Aperta_web_app.Data
 
         public bool? BillingDetails { get; set; }  // true or false
 
-        // Foreign key relationships
-        //[ForeignKey("Club")]
-        //public int ClubId { get; set; }
-        //public virtual Club Club { get; set; }
+        // foreign key relationships
+        [ForeignKey("Club")]
+        public int ClubId { get; set; }
+        public virtual Club Club { get; set; }
 
-        //[ForeignKey("Group")]
-        //public int? GroupId { get; set; }
-        //public virtual Group? Group { get; set; }
+        [ForeignKey("Group")]
+        public int? GroupId { get; set; }
+        public virtual Group? Group { get; set; }
 
         //[ForeignKey("Role")]
         //public int RoleId { get; set; }  // Foreign key for Role

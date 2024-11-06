@@ -12,19 +12,21 @@ namespace Aperta_web_app.Data
         public DbSet<Group> Groups { get; set; }
         
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    //modelBuilder.Entity<User>()
-        //    //    .HasOne(u => u.Club)
-        //    //    .WithMany(c => c.Users)
-        //    //    .HasForeignKey(u => u.ClubId);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //    //modelBuilder.Entity<User>()
-        //    //    .HasOne(u => u.Group)
-        //    //    .WithMany(g => g.Users)
-        //    //    .HasForeignKey(u => u.GroupId);
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.Club)
+               .WithMany(c => c.Users)
+               .HasForeignKey(u => u.ClubId);
+
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.Group)
+               .WithMany(g => g.Users)
+               .HasForeignKey(u => u.GroupId);
 
             
-        //}
+        }
     }
 }

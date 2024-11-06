@@ -23,6 +23,8 @@ namespace Aperta_web_app.Data
 
         public required bool BillingInfo { get; set; }  // true or false
 
+        public ICollection<User> Users { get; set; }
+
         // Navigation property to link with Users if needed
         //public virtual ICollection<User> Users { get; set; } = new List<User>();
     }

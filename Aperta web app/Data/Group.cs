@@ -10,6 +10,6 @@ namespace Aperta_web_app.Data
         public required string Name { get; set; }
 
         // Navigation property
-        //public virtual ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<User> Users { get; set; }
     }
 }
