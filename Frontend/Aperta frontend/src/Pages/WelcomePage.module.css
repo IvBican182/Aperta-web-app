@@ -1,0 +1,25 @@
+.welcomeContainer {
+    font-family: "Lato", sans-serif;
+    align-self: center;
+    padding-top: 2%;
+    display: flex;
+    flex-direction: row;
+    padding-left: 10%;
+    padding-right: 10%;
+    
+}
+
+.welcomeHeader {
+    color: #DAA520;  
+    font-size: 5vw;  
+}
+
+.welcomeText {
+    color: rgb(221, 221, 212);  
+    font-size: 1.6vw;
+}
+
+.span {
+    color: rgba(212, 212, 126, 0.856); 
+    font-size: 1.8vw;
+}

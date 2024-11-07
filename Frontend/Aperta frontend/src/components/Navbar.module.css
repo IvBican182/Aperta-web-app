@@ -1,0 +1,37 @@
+.navbar {
+    background-color: transparent; /* Transparent background */
+    padding: 1rem 2rem; /* Padding for navbar */
+}
+
+.navbarContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+.navAuth {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.latoBold {
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 22px;
+  }
+
+  .logoutButton {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 22px;
+    color: bisque;
+  }

@@ -1,24 +1,20 @@
-import { useEffect, useState } from "react"
+import { Outlet } from "react-router";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
-  const [loadedData, setLoadedData] = useState([])
-
-  async function fetchData () {
-    const response = await fetch("https://localhost:7147/api/Clubs");
-    const data = await response.json();
-    console.log(data);
-  }
-
-  useEffect(()=>{
-    fetchData();
-  }, [])
-
+  
 
   return (
-    <>
-      <div>Aperta web app</div>
-    </>
+    <section className="main-container">
+      <Navbar />
+      <div className="outlet-container">
+        <Outlet />
+      </div>
+      <Footer />
+    </section>
   )
 }
 
