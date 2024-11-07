@@ -17,11 +17,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        b => b.AllowAnyHeader()
-        .AllowAnyOrigin()
-        .AllowAnyMethod());
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")  // Your frontend URL
+              .AllowAnyHeader()
+              .AllowAnyOrigin()
+              .AllowAnyMethod();
+    });
 });
+
+
+
+
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
@@ -47,6 +54,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
