@@ -3,6 +3,7 @@ using System;
 using Aperta_web_app.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aperta_web_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107164634_addAdminServicesTable")]
+    partial class addAdminServicesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,33 @@ namespace Aperta_web_app.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Aperta_web_app.Data.AdminInviteToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AdminInviteTokens");
+                });
 
             modelBuilder.Entity("Aperta_web_app.Data.Club", b =>
                 {
@@ -64,41 +94,6 @@ namespace Aperta_web_app.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clubs");
-                });
-
-            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClubId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClubId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("GeneralAdminInvitations");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.Group", b =>
@@ -246,19 +241,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6993f94f-2de6-41bc-be18-0f78bfaee9a5",
+                            Id = "a54ccb71-72a1-4990-960a-ca43bddf8cb8",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "6274c1a4-4987-4108-8664-a3545566aeb9",
+                            Id = "1dfe75f4-6c65-4813-9e23-9dbdb5321f7c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "31965bfe-f09f-407c-be19-e15b509042b1",
+                            Id = "e40f81ce-c421-4262-aa76-224bb5f766c6",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -368,25 +363,6 @@ namespace Aperta_web_app.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
-                {
-                    b.HasOne("Aperta_web_app.Data.Club", "Club")
-                        .WithMany()
-                        .HasForeignKey("ClubId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Club");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.User", b =>

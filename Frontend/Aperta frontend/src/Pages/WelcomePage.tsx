@@ -1,8 +1,17 @@
 import style from "./WelcomePage.module.css";
+import { NavLink, useNavigate } from "react-router-dom";
+
 
 
 //welcome component, renders at the start of application
 export default function WelcomePage() {
+
+    const navigate = useNavigate();
+    
+    function handleSubmit() {
+        navigate('/clubLogin');
+    }
+
     return(
         <div className={style.welcomeContainer}>
             <div className={style.textContainer}>
@@ -15,7 +24,7 @@ export default function WelcomePage() {
                 </p>
                 <p>Did you get your login information yet ?</p>
                 <p>Click "start" to begin with our onboarding process</p>
-                <button>Start</button>
+                <button onClick={handleSubmit}>Start</button>
             </div>
             <div className={style.img}>
                 {/* <img src={running} /> */}

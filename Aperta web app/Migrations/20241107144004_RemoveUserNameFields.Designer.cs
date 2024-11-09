@@ -3,6 +3,7 @@ using System;
 using Aperta_web_app.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aperta_web_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107144004_RemoveUserNameFields")]
+    partial class RemoveUserNameFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,41 +67,6 @@ namespace Aperta_web_app.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clubs");
-                });
-
-            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClubId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClubId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("GeneralAdminInvitations");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.Group", b =>
@@ -246,19 +214,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6993f94f-2de6-41bc-be18-0f78bfaee9a5",
+                            Id = "b87e6c44-fa22-40eb-8ae2-5f995b70a133",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "6274c1a4-4987-4108-8664-a3545566aeb9",
+                            Id = "4e3ac7e3-7a39-4516-bd74-ce1df33a013a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "31965bfe-f09f-407c-be19-e15b509042b1",
+                            Id = "3f7909a4-3022-45b6-bf55-4f5de3ac6491",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -368,25 +336,6 @@ namespace Aperta_web_app.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
-                {
-                    b.HasOne("Aperta_web_app.Data.Club", "Club")
-                        .WithMany()
-                        .HasForeignKey("ClubId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Club");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.User", b =>

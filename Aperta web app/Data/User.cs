@@ -35,6 +35,9 @@ namespace Aperta_web_app.Data
         public int? GroupId { get; set; }
         public virtual Group? Group { get; set; }
 
+        public override string UserName { get; set; } = string.Empty;
+        public override string NormalizedUserName { get; set; } = string.Empty;
+
         //[ForeignKey("Role")]
         //public int RoleId { get; set; }  // Foreign key for Role
         //public virtual Role Role { get; set; }

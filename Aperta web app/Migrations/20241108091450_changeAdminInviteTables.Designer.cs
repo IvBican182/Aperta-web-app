@@ -3,6 +3,7 @@ using System;
 using Aperta_web_app.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aperta_web_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241108091450_changeAdminInviteTables")]
+    partial class changeAdminInviteTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,19 +249,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6993f94f-2de6-41bc-be18-0f78bfaee9a5",
+                            Id = "30e49d28-635e-4838-ac2c-5c4157073b53",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "6274c1a4-4987-4108-8664-a3545566aeb9",
+                            Id = "7a56e4da-8f30-4412-9d75-de57ba7b9231",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "31965bfe-f09f-407c-be19-e15b509042b1",
+                            Id = "054f9e5f-6191-4b5a-97ae-8f305c86e216",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -378,15 +381,13 @@ namespace Aperta_web_app.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Club");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.User", b =>

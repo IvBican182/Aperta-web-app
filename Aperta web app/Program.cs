@@ -2,12 +2,34 @@ using Aperta_web_app.Configurations;
 using Aperta_web_app.Contracts;
 using Aperta_web_app.Data;
 using Aperta_web_app.Repository;
+using Aperta_web_app.Services;
+using Aperta_web_app.Services.Implementations;
+using Aperta_web_app.Services.interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient<MailgunEmailService>();
+
+builder.Services.AddSingleton<IEmailService>(provider =>
+            new MailgunEmailService(
+            builder.Configuration["Mailgun:ApiKey"],
+               builder.Configuration["Mailgun:Domain"],
+                provider.GetRequiredService<HttpClient>()
+           ));
+
+builder.Services.AddScoped<IInvitationService, InvitationService>();
+
+
+
+var apiKey = builder.Configuration["Mailgun:ApiKey"];
+var domain = builder.Configuration["Mailgun:Domain"];
+Console.WriteLine($"Extracted API Key: {apiKey}");
+Console.WriteLine($"Extracted Domain: {domain}");
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -29,7 +51,6 @@ builder.Services.AddCors(options =>
 
 
 
-
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -47,6 +68,11 @@ builder.Services.AddIdentityCore<User>()
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+
+
+//var emailService = app.Services.GetRequiredService<IEmailService>();
+//await (emailService as MailgunEmailService).SendEmailAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

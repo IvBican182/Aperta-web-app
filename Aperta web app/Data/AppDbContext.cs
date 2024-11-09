@@ -1,6 +1,9 @@
 ﻿using Aperta_web_app.Data.Configurations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System.Numerics;
 
 namespace Aperta_web_app.Data
@@ -11,7 +14,8 @@ namespace Aperta_web_app.Data
 
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Group> Groups { get; set; }
-        
+        public DbSet<GeneralAdminInvitation> GeneralAdminInvitations { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +32,22 @@ namespace Aperta_web_app.Data
                .WithMany(g => g.Users)
                .HasForeignKey(u => u.GroupId);
 
-            
+
+            modelBuilder.Entity<GeneralAdminInvitation>()
+                .HasOne(i => i.Club)
+                .WithMany()                     // Assuming no navigation back to Invitations in Club
+                .HasForeignKey(i => i.ClubId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GeneralAdminInvitation>()
+                .HasOne(g => g.Role)  // Navigation property for Role
+                .WithMany()  // Roles don't reference invitations, no reverse navigation needed
+                .HasForeignKey(g => g.RoleId)  // Foreign key in GeneralAdminInvitation
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
         }
     }
 }
