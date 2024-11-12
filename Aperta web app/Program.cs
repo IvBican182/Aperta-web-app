@@ -23,6 +23,7 @@ builder.Services.AddSingleton<IEmailService>(provider =>
            ));
 
 builder.Services.AddScoped<IInvitationService, InvitationService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 

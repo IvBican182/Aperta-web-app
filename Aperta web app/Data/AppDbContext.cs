@@ -40,9 +40,9 @@ namespace Aperta_web_app.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GeneralAdminInvitation>()
-                .HasOne(g => g.Role)  // Navigation property for Role
-                .WithMany()  // Roles don't reference invitations, no reverse navigation needed
-                .HasForeignKey(g => g.RoleId)  // Foreign key in GeneralAdminInvitation
+                .HasOne(g => g.Role)  
+                .WithMany()  
+                .HasForeignKey(g => g.RoleId)  
                 .OnDelete(DeleteBehavior.Restrict);
 
 

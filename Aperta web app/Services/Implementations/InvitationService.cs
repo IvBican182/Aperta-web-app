@@ -1,5 +1,6 @@
 ﻿using Aperta_web_app.Data;
 using Aperta_web_app.Services.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aperta_web_app.Services.Implementations
 {
@@ -27,7 +28,9 @@ namespace Aperta_web_app.Services.Implementations
                 ClubId = clubId,
                 RoleId = roleId,
                 Token = token,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                IsUsed = false
+
             };
 
             _dbContext.GeneralAdminInvitations.Add(invitation);
@@ -38,6 +41,34 @@ namespace Aperta_web_app.Services.Implementations
             await _emailService.SendEmailAsync(email, "You're invited to join as General Admin", $"Click here to register: {invitationUrl}");
 
             return true;
+        }
+
+        public async Task<GeneralAdminInvitation> GetInvitationByTokenAsync(string token)
+        {
+            var adminInvitation = await _dbContext.GeneralAdminInvitations.FirstOrDefaultAsync(x => x.Token == token);
+
+            if(adminInvitation == null)
+            {
+                return null;
+            }
+
+            return adminInvitation;
+        }
+
+        public async Task MarkAsUsedAsync(int id)
+        {
+            var invitation = await _dbContext.GeneralAdminInvitations.FirstOrDefaultAsync(q => q.Id == id);
+
+            if (invitation == null)
+            {
+                throw new InvalidOperationException("Invitation not found.");
+            }
+
+            invitation.IsUsed = true;  // Mark the invitation as used
+
+            _dbContext.GeneralAdminInvitations.Update(invitation);
+            await _dbContext.SaveChangesAsync();
+
         }
     }
 }
