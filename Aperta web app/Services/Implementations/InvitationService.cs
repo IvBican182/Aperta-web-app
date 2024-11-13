@@ -37,7 +37,7 @@ namespace Aperta_web_app.Services.Implementations
             await _dbContext.SaveChangesAsync();
 
             // Send invitation email with token
-            var invitationUrl = $"https://localhost:7147/register?token={token}";
+            var invitationUrl = $"http://localhost:5173/register?token={token}";
             await _emailService.SendEmailAsync(email, "You're invited to join as General Admin", $"Click here to register: {invitationUrl}");
 
             return true;

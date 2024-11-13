@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Aperta_web_app.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class VerifyAdminInvitationController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace Aperta_web_app.Controllers
             this._invitationService = invitationService;
             
         }
-        [HttpGet("api/auth/verify-invite-token")]
+        [HttpGet("verify-invite-token")]
         public async Task<IActionResult> VerifyInviteToken(string token)
         {
             // 1. Retrieve invitation details using the token

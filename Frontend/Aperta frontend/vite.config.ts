@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:7147',  // Proxy all requests to /api to the .NET backend
+      '/api': 'https://localhost:7147',  // Proxy all requests to /api to the .NET backend
     }
   }
 })

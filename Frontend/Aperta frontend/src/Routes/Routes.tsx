@@ -3,6 +3,9 @@ import App from "../App";
 import ErrorPage from "../Pages/ErrorPage";
 import WelcomePage from "../Pages/WelcomePage";
 import ClubLoginPage from "../Pages/ClubLoginPage";
+import AuthPage from "../Pages/AuthPage";
+import TestPage from "../Pages/TestPage";
+import Homepage from "../Pages/Homepage";
 
 export const router = createBrowserRouter([
     { 
@@ -11,19 +14,23 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: "", element: <WelcomePage /> },
-            { path: "/clubLogin", element: <ClubLoginPage /> }
-            //{ path: "/home", element: <Homepage /> },
-           /* { path: "/groups", element: <GroupsPage /> },
+            { path: "/test" , element: <TestPage />},
+            { path: "/clubLogin", element: <ClubLoginPage /> },
+            { path: "/register", element: <AuthPage /> },
+            { path: "/home", element: <Homepage /> },
+            
+           {/*  { path: "/home", element: <Homepage /> },
+            { path: "/groups", element: <GroupsPage /> },
             { path: "/login", element: <Login /> },
             { path: "/signUp", element: <SignUp /> },
-            { path: "/profile/:id", element: <UserProfile /> },
+            { path: "/profile/:id", element: <UserProfile /> }, */}
             
-            */
+            
         ]
     }
 
-], 
-{
+]
+/* {
     future: {
         v7_skipActionErrorRevalidation: true ,
         v7_relativeSplatPath: true,
@@ -32,9 +39,7 @@ export const router = createBrowserRouter([
         v7_partialHydration: true,
         
         
-         // Enable the future flag
+         
     }
-});
-
-
+} */);
 
