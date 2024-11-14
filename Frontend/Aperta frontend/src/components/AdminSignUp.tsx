@@ -10,11 +10,22 @@ import { RootState } from "../Redux/store";
 import { useLocation } from "react-router";
 
 
+
 export default function AdminSignUp() {
+
+    const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
+
     const location = useLocation();  // Get location object which contains query parameters
+
     const token = new URLSearchParams(location.search).get('token');
 
-    const { email } = useSelector((state: RootState) => state.invitation)
+    const { email, clubId, roleId } = useSelector((state: RootState) => state.invitation);
+
+    const { club } = useSelector((state: RootState) => state.club);
+
+    console.log(club);
 
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
@@ -29,11 +40,6 @@ export default function AdminSignUp() {
         
     });
 
-
-
-    const dispatch = useAppDispatch();
-
-    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData((preValue) => {
@@ -62,7 +68,14 @@ export default function AdminSignUp() {
         };
 
         dispatch(userSignUp(dataToSubmit));
-        navigate('/home');
+
+        if(club && !club.billingInfo && roleId == "6993f94f-2de6-41bc-be18-0f78bfaee9a5") {
+            navigate("/onboarding");
+        } else {
+            navigate('/home');
+        }
+        //// navigate to onboarding if club.billingInfo == false
+        
         console.log("Submitted data:", dataToSubmit); 
     };
 

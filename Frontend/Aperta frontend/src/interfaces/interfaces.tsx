@@ -32,3 +32,7 @@ export interface User {
     
     
 }
+
+export interface ErrorPayload {
+       message: string;
+}

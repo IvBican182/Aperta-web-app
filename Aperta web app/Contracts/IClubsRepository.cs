@@ -6,5 +6,7 @@ namespace Aperta_web_app.Contracts
     public interface IClubsRepository : IGenericRepository<Club>
     {
         Task<Club> GetClubDetails(int id);
+
+        Task UpdateClubBillingInfo(int id, bool billingStatus);
     }
 }

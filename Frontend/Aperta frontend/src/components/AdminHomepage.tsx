@@ -23,8 +23,20 @@ export default function AdminHomepage() {
     }, []); */
 
     return(
+        <>
+        <p>textich</p>
         <Container className={style.userContainer}>
             <Row className={style.row}>
+
+            <Col className="col-md-4">
+                    <div className={style.card}>
+                        <div className="card-body">
+                            <h5 className="card-title">GROUPS</h5>
+                            <p>add players and manage groups of players to your liking</p>
+                            <button className="btn btn-primary" onClick={()=> navigate("/groups")}>SEE MORE</button>
+                        </div>
+                    </div>
+                </Col>
                 
                 <Col className="col-md-4">
                     <div className={style.card}>
@@ -73,5 +85,8 @@ export default function AdminHomepage() {
                 </Col>
             </Row>
         </Container>
+        </>
+
+        
     )
 }

@@ -51,7 +51,7 @@ export const userSlice = createSlice({
         .addCase(fetchUsers.fulfilled, (state, action) => {
             state.users = action.payload //sets our users as an array in our state
         })
-        .addCase(fetchSingleUser.fulfilled, (state, action) => {
+        .addCase(fetchSingleUser.fulfilled, (state,action) => {
             state.user = action.payload //sets fetched user to user state
         })
         

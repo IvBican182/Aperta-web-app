@@ -3,13 +3,15 @@ import { useDispatch } from 'react-redux';
 import userSliceReducer from "./userSlice";
 import  invitationSliceReducer  from "./invitationSlice";
 import  authSliceReducer  from "./authSlice";
+import clubSliceReducer from "./clubSlice";
 
 //configuring redux store
 const store = configureStore({
     reducer: {
       users: userSliceReducer,
       invitation: invitationSliceReducer,
-      auth: authSliceReducer
+      auth: authSliceReducer,
+      club: clubSliceReducer
       
     }
   });

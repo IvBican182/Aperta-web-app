@@ -110,6 +110,21 @@ namespace Aperta_web_app.Controllers
             return CreatedAtAction("GetClub", new { id = club.Id }, club);
         }
 
+        [HttpPut("{id}/billingInfo")]
+
+        public async Task<IActionResult> UpdateBillingInfo(int id, [FromBody] bool billingStatus)
+        {
+            try
+            {
+                await _clubsRepository.UpdateClubBillingInfo(id, billingStatus);
+                return Ok(new { message = "Billing information updated successfully." });
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Failed to update billing info: {ex.Message}" });
+            }
+        }
+
         // DELETE: api/Clubs/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClub(int id)

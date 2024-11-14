@@ -6,6 +6,8 @@ import ClubLoginPage from "../Pages/ClubLoginPage";
 import AuthPage from "../Pages/AuthPage";
 import TestPage from "../Pages/TestPage";
 import Homepage from "../Pages/Homepage";
+import OnBoardingPage from "../Pages/OnBoardingPage";
+import GroupsPage from "../Pages/GroupsPage";
 
 export const router = createBrowserRouter([
     { 
@@ -14,10 +16,11 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: "", element: <WelcomePage /> },
-            { path: "/test" , element: <TestPage />},
+            { path: "/onboarding" , element: <OnBoardingPage />},
             { path: "/clubLogin", element: <ClubLoginPage /> },
             { path: "/register", element: <AuthPage /> },
             { path: "/home", element: <Homepage /> },
+            { path: "/groups", element: <GroupsPage /> },
             
            {/*  { path: "/home", element: <Homepage /> },
             { path: "/groups", element: <GroupsPage /> },

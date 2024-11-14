@@ -5,6 +5,7 @@ import { verifyInviteToken, resetInviteState } from "../Redux/invitationSlice";
 import { RootState } from "../Redux/store";
 import { useLocation } from "react-router";
 import AdminSignUp from "../components/AdminSignUp";
+import { getSingleClub } from "../Redux/clubSlice";
 
 export default function AuthPage() {
     const dispatch = useAppDispatch();
@@ -30,6 +31,25 @@ export default function AuthPage() {
             dispatch(resetInviteState()); // Clean up on component unmount
         };
     }, [token, dispatch]);
+
+    useEffect(() => {
+        if (clubId) {  // Only dispatch if clubId is available
+            const fetchClubDetails = async () => {
+                try {
+                    const club = await dispatch(getSingleClub(clubId)).unwrap();
+                    console.log("Club details fetched:", club);
+                } catch (err) {
+                    console.error("Failed to fetch club details:", err);
+                }
+            };
+            fetchClubDetails();
+        } else {
+            console.warn("clubId is null or undefined.");
+        }
+        
+ 
+        
+     }, [clubId, dispatch])
 
     if (isLoading) return <p>Verifying invitation token...</p>;
      if (error) return <p>{error}</p>;

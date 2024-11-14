@@ -16,5 +16,19 @@ namespace Aperta_web_app.Repository
         {
            return await _context.Clubs.FirstOrDefaultAsync(q => q.Id == id);
         }
+
+        public async Task UpdateClubBillingInfo(int id, bool billingStatus)
+        {
+            var club = await _context.Clubs.FirstOrDefaultAsync(q => q.Id == id);
+
+            if(club == null)
+            {
+                throw new Exception("Club not found!");
+            }
+
+            club.BillingInfo = billingStatus;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
