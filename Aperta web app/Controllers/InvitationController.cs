@@ -28,5 +28,17 @@ namespace Aperta_web_app.Controllers
             return BadRequest("Failed to send invitation");
 
         }
+
+        [HttpPost("send-user-invite")]
+        public async Task<IActionResult> SendUserInvite([FromBody] UserInvitationDto request)
+        {
+            var result = await _invitationService.SendUserInvitationAsync(request.Email, request.ClubId, request.GroupId);
+
+            if (result)
+                return Ok("Invitation sent successfully");
+
+            return BadRequest("Failed to send invitation");
+
+        }
     }
 }

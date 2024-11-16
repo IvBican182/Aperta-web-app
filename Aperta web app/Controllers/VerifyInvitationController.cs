@@ -7,11 +7,11 @@ namespace Aperta_web_app.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class VerifyAdminInvitationController : ControllerBase
+    public class VerifyInvitationController : ControllerBase
     {
         private readonly IInvitationService _invitationService;
 
-        public VerifyAdminInvitationController(IInvitationService invitationService)
+        public VerifyInvitationController(IInvitationService invitationService)
         {
             this._invitationService = invitationService;
             
@@ -20,7 +20,7 @@ namespace Aperta_web_app.Controllers
         public async Task<IActionResult> VerifyInviteToken(string token)
         {
             // 1. Retrieve invitation details using the token
-            var invitation = await _invitationService.GetInvitationByTokenAsync(token);
+            var invitation = await _invitationService.GetAdminInvitationByTokenAsync(token);
 
             // 2. Check if the invitation is null or expired
             if (invitation == null || invitation.IsUsed)
@@ -34,6 +34,28 @@ namespace Aperta_web_app.Controllers
                 Email = invitation.Email,
                 ClubId = invitation.ClubId,
                 RoleId = invitation.RoleId,
+                IsUsed = invitation.IsUsed
+            });
+        }
+
+        [HttpGet("verify-user-invite-token")]
+        public async Task<IActionResult> VerifyUserInviteToken(string token)
+        {
+            // 1. Retrieve invitation details using the token
+            var invitation = await _invitationService.GetUserInvitationByTokenAsync(token);
+
+            // 2. Check if the invitation is null or expired
+            if (invitation == null || invitation.IsUsed)
+            {
+                return BadRequest(new { message = "Invalid or expired token." });
+            }
+
+            // 3. Return the necessary details to the frontend
+            return Ok(new
+            {
+                Email = invitation.Email,
+                ClubId = invitation.ClubId,
+                GroupId = invitation.GroupId,
                 IsUsed = invitation.IsUsed
             });
         }

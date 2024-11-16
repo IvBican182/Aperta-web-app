@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aperta_web_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241107164634_addAdminServicesTable")]
-    partial class addAdminServicesTable
+    [Migration("20241116124126_createInitial")]
+    partial class createInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,33 +24,6 @@ namespace Aperta_web_app.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Aperta_web_app.Data.AdminInviteToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AdminInviteTokens");
-                });
 
             modelBuilder.Entity("Aperta_web_app.Data.Club", b =>
                 {
@@ -94,6 +67,44 @@ namespace Aperta_web_app.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clubs");
+                });
+
+            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClubId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("GeneralAdminInvitations");
                 });
 
             modelBuilder.Entity("Aperta_web_app.Data.Group", b =>
@@ -165,7 +176,6 @@ namespace Aperta_web_app.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -193,7 +203,6 @@ namespace Aperta_web_app.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -211,6 +220,43 @@ namespace Aperta_web_app.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Aperta_web_app.Data.UserInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClubId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("UserInvitations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -241,19 +287,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a54ccb71-72a1-4990-960a-ca43bddf8cb8",
+                            Id = "230e7fbd-68ef-4af7-88f5-23b0881419a4",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "1dfe75f4-6c65-4813-9e23-9dbdb5321f7c",
+                            Id = "acd820b9-2a6e-43b1-a125-09e72fdc69f7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e40f81ce-c421-4262-aa76-224bb5f766c6",
+                            Id = "86dd786e-eb95-4cd9-9806-5edc199a60bb",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -365,6 +411,25 @@ namespace Aperta_web_app.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Aperta_web_app.Data.GeneralAdminInvitation", b =>
+                {
+                    b.HasOne("Aperta_web_app.Data.Club", "Club")
+                        .WithMany()
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Club");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Aperta_web_app.Data.User", b =>
                 {
                     b.HasOne("Aperta_web_app.Data.Club", "Club")
@@ -376,6 +441,25 @@ namespace Aperta_web_app.Migrations
                     b.HasOne("Aperta_web_app.Data.Group", "Group")
                         .WithMany("Users")
                         .HasForeignKey("GroupId");
+
+                    b.Navigation("Club");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("Aperta_web_app.Data.UserInvitation", b =>
+                {
+                    b.HasOne("Aperta_web_app.Data.Club", "Club")
+                        .WithMany()
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aperta_web_app.Data.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Club");
 

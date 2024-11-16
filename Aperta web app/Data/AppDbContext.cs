@@ -14,7 +14,8 @@ namespace Aperta_web_app.Data
 
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<GeneralAdminInvitation> GeneralAdminInvitations { get; set; }
+        public DbSet<GeneralAdminInvitation> GeneralAdminInvitations { get; set; }     
+        public DbSet<UserInvitation> UserInvitations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,9 +46,18 @@ namespace Aperta_web_app.Data
                 .HasForeignKey(g => g.RoleId)  
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<UserInvitation>()
+                .HasOne(i => i.Club)
+                .WithMany()                     // Assuming no navigation back to Invitations in Club
+                .HasForeignKey(i => i.ClubId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
-
+            modelBuilder.Entity<UserInvitation>()
+                .HasOne(g => g.Group)
+                .WithMany()
+                .HasForeignKey(g => g.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

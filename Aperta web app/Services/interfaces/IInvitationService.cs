@@ -6,7 +6,11 @@ namespace Aperta_web_app.Services.interfaces
     {
         Task<bool> SendInvitationAsync(string email, int clubId, string roleId);
 
-        Task<GeneralAdminInvitation> GetInvitationByTokenAsync(string token);
+        Task<bool> SendUserInvitationAsync(string email, int clubId, int groupId);
+
+        Task<GeneralAdminInvitation> GetAdminInvitationByTokenAsync(string token);
+
+        Task<UserInvitation> GetUserInvitationByTokenAsync(string token);
 
         Task MarkAsUsedAsync(int id);
     }

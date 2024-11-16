@@ -219,6 +219,43 @@ namespace Aperta_web_app.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Aperta_web_app.Data.UserInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClubId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("UserInvitations");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -247,19 +284,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9fdf3c6b-0b65-496b-91c8-3cd1d2f07720",
+                            Id = "230e7fbd-68ef-4af7-88f5-23b0881419a4",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "f9e75927-26df-4263-9178-3ef7bd1156f0",
+                            Id = "acd820b9-2a6e-43b1-a125-09e72fdc69f7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "049857ad-835a-4187-8080-36fb65cdd87f",
+                            Id = "86dd786e-eb95-4cd9-9806-5edc199a60bb",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -401,6 +438,25 @@ namespace Aperta_web_app.Migrations
                     b.HasOne("Aperta_web_app.Data.Group", "Group")
                         .WithMany("Users")
                         .HasForeignKey("GroupId");
+
+                    b.Navigation("Club");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("Aperta_web_app.Data.UserInvitation", b =>
+                {
+                    b.HasOne("Aperta_web_app.Data.Club", "Club")
+                        .WithMany()
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aperta_web_app.Data.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Club");
 

@@ -26,7 +26,7 @@ interface ErrorPayload {
 
 export const userSignUp = createAsyncThunk<AuthResponse, SignUpFormData>("auth/signUp", async(formData,thunkAPI) => {
     try {
-        const response = await fetch("https://localhost:7147/api/RegisterAdminUser/api/auth/register", {
+        const response = await fetch("https://localhost:7147/api/auth/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)

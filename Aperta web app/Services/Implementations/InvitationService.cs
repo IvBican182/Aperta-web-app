@@ -43,7 +43,31 @@ namespace Aperta_web_app.Services.Implementations
             return true;
         }
 
-        public async Task<GeneralAdminInvitation> GetInvitationByTokenAsync(string token)
+        public async Task<bool> SendUserInvitationAsync(string email, int clubId, int groupId)
+        {
+            var token = Guid.NewGuid().ToString();
+
+            var invitation = new UserInvitation
+            {
+                Email = email,
+                ClubId = clubId,
+                GroupId = groupId,
+                Token = token,
+                CreatedAt = DateTime.UtcNow,
+                IsUsed = false
+            };
+
+            _dbContext.UserInvitations.Add(invitation);
+            await _dbContext.SaveChangesAsync();
+
+            var invitationUrl = $"http://localhost:5173/register?token={token}";
+
+            await _emailService.SendEmailAsync(email, "You're invited to join the team", $"Click here to register: {invitationUrl}");
+
+            return true;
+        }
+
+        public async Task<GeneralAdminInvitation> GetAdminInvitationByTokenAsync(string token)
         {
             var adminInvitation = await _dbContext.GeneralAdminInvitations.FirstOrDefaultAsync(x => x.Token == token);
 
@@ -53,6 +77,18 @@ namespace Aperta_web_app.Services.Implementations
             }
 
             return adminInvitation;
+        }
+
+        public async Task<UserInvitation> GetUserInvitationByTokenAsync(string token)
+        {
+            var userInvitation = await _dbContext.UserInvitations.FirstOrDefaultAsync(x => x.Token == token);
+
+            if (userInvitation == null)
+            {
+                return null;
+            }
+
+            return userInvitation;
         }
 
         public async Task MarkAsUsedAsync(int id)

@@ -69,7 +69,7 @@ export default function AdminSignUp() {
 
         dispatch(userSignUp(dataToSubmit));
 
-        if(club && !club.billingInfo && roleId == "6993f94f-2de6-41bc-be18-0f78bfaee9a5") {
+        if(club && !club.billingInfo && roleId == "230e7fbd-68ef-4af7-88f5-23b0881419a4") {
             navigate("/onboarding");
         } else {
             navigate('/home');
