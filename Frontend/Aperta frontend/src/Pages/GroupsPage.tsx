@@ -5,6 +5,7 @@ import { createGroup, getAllGroups } from "../Redux/groupSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { sendUserInvitation } from "../Redux/invitationSlice";
+import { ROLE_ID } from "../config/roles";
 
 
 export default function GroupsPage() {
@@ -13,6 +14,10 @@ export default function GroupsPage() {
     const { club } = useSelector((state: RootState) => state.club);
     
     const clubId = club?.id
+
+    console.log(club);
+
+    console.log(clubId);
     
     
 
@@ -67,6 +72,7 @@ export default function GroupsPage() {
                 email: formData.Email,
                 clubId: clubId,
                 groupId: selectedGroupId,
+                roleId: ROLE_ID.USER
             })
         )
             .unwrap()
@@ -80,8 +86,18 @@ export default function GroupsPage() {
     };
 
 
-    function submitGroup() {
-        dispatch(createGroup( formData.groupName ))
+    const submitGroup = async () => {
+        try {
+            await dispatch(createGroup(formData.groupName)).unwrap(); // Assuming createGroup returns a promise
+            // After the group is created, fetch the groups again or add the new group to state
+            fetchGroups(); // Optionally you could update the state directly like below:
+            // setGroups((prevGroups) => [...prevGroups, { id: newId, name: formData.groupName }]);
+
+            // Clear the group name input field
+            setFormData((prev) => ({ ...prev, groupName: '' }));
+        } catch (error) {
+            console.error("Error creating group:", error);
+        }
     };
 
     

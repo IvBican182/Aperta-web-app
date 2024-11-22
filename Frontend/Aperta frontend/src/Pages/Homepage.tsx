@@ -1,27 +1,30 @@
 import {  useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import AdminHomepage from "../components/AdminHomepage";
-//import AdminHomepage from "../components/AdminHomepage";
-//import UserHomepage from "../components/UserHomepage";
+import UserHomepage from "../components/UserHomepage";
+import { ROLE_NAME } from "../config/roles";
 
 
 export default function Homepage() {
     
 
-    /* const user = useSelector((state: RootState) => state.auth.user );
-    console.log(user);
     
     
-    if (!user) {
-        return <p>Loading...</p>; // or redirect to login
-      } */
+
+    const { role, user } = useSelector((state: RootState) => state.auth);
+
+    if(!user) {
+        console.log("no user found");
+    }
+    
+    console.log( role);
     
     
 
     return (
         <div className="container">
-           {/*  {user.role_id === 1 ? <AdminHomepage /> : <UserHomepage />} */}
-           <AdminHomepage />
+            {role === ROLE_NAME.GENERAL_ADMIN ? <AdminHomepage /> : <UserHomepage />}
+          
            
         </div>
     )

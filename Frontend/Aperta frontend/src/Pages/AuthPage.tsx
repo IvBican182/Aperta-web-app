@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import { verifyInviteToken, resetInviteState } from "../Redux/invitationSlice";
 import { RootState } from "../Redux/store";
 import { useLocation } from "react-router";
-import AdminSignUp from "../components/AdminSignUp";
+import SignUp from "../components/SignUp";
 import { getSingleClub } from "../Redux/clubSlice";
 
 export default function AuthPage() {
     const dispatch = useAppDispatch();
-    const { email, clubId, roleId, isUsed, isLoading, error } = useSelector((state: RootState) => state.invitation);
+    const { email, clubId, roleId, groupId, isUsed, isLoading, error } = useSelector((state: RootState) => state.invitation);
     
     //const { token } = useParams<{ token: string }>();
     const location = useLocation();  // Get location object which contains query parameters
@@ -55,11 +55,11 @@ export default function AuthPage() {
      if (error) return <p>{error}</p>;
     if (isUsed) return <p>This invitation token has already been used.</p>;  
 
-     console.log("Invitation state:", { email, clubId, roleId, isUsed, isLoading, error }); 
+     console.log("Invitation state:", { email, clubId, groupId, roleId, isUsed, isLoading, error }); 
 
     return (
         <div>
-            <AdminSignUp />
+            <SignUp />
         </div>
     )
 }

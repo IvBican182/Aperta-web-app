@@ -1,5 +1,7 @@
+import { useSelector } from "react-redux";
 import style from "./WelcomePage.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { RootState } from "../Redux/store";
 
 
 
@@ -7,10 +9,18 @@ import { NavLink, useNavigate } from "react-router-dom";
 export default function WelcomePage() {
 
     const navigate = useNavigate();
+
+    const token = useSelector((state: RootState) => state.auth.token)
+
+    console.log(token);
     
     function handleSubmit() {
-        navigate('/clubLogin');
-    }
+        if (!token) {
+            navigate("/login");
+        } else {
+            navigate("/home");
+        }
+    };
 
     return(
         <div className={style.welcomeContainer}>
@@ -22,9 +32,15 @@ export default function WelcomePage() {
                   team management and enhance your experience on and off the field. From scheduling games and tracking 
                   player stats to managing club logistics and communicating with teammates, we've got you covered.
                 </p>
-                <p>Did you get your login information yet ?</p>
-                <p>Click "start" to begin with our onboarding process</p>
+                <p>Did you already setup an account ?</p>
+                <p>Click start !</p>
                 <button onClick={handleSubmit}>Start</button>
+
+                <div>
+                    <p> You manage a sport team and need our services ? </p>
+                    <p> Contact us - ibicanic@live.com</p>
+                </div>
+                
             </div>
             <div className={style.img}>
                 {/* <img src={running} /> */}

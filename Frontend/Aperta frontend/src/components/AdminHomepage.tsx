@@ -1,14 +1,9 @@
-import { useAppDispatch } from "../Redux/store";
-import { useSelector } from "react-redux";
-import { fetchUsers } from "../Redux/userSlice";
-import { RootState } from "../Redux/store";
-import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap"
 import style from "./AdminHomepage.module.css";
 import { useNavigate } from "react-router";
 
 export default function AdminHomepage() {
-    const dispatch = useAppDispatch();
+   
     const navigate = useNavigate();
 
     //const users = useSelector((state: RootState) => state.users.users )

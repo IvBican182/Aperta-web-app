@@ -106,36 +106,6 @@ namespace Aperta_web_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserInvitations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    ClubId = table.Column<int>(type: "integer", nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: false),
-                    Token = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsUsed = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserInvitations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserInvitations_Clubs_ClubId",
-                        column: x => x.ClubId,
-                        principalTable: "Clubs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserInvitations_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -157,7 +127,7 @@ namespace Aperta_web_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GeneralAdminInvitations",
+                name: "UserInvitations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -165,21 +135,28 @@ namespace Aperta_web_app.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     ClubId = table.Column<int>(type: "integer", nullable: false),
                     RoleId = table.Column<string>(type: "text", nullable: false),
+                    GroupId = table.Column<int>(type: "integer", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsUsed = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeneralAdminInvitations", x => x.Id);
+                    table.PrimaryKey("PK_UserInvitations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GeneralAdminInvitations_Clubs_ClubId",
+                        name: "FK_UserInvitations_Clubs_ClubId",
                         column: x => x.ClubId,
                         principalTable: "Clubs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GeneralAdminInvitations_Roles_RoleId",
+                        name: "FK_UserInvitations_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserInvitations_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
@@ -276,9 +253,9 @@ namespace Aperta_web_app.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "230e7fbd-68ef-4af7-88f5-23b0881419a4", null, "GeneralAdmin", "GENERALADMIN" },
-                    { "86dd786e-eb95-4cd9-9806-5edc199a60bb", null, "User", "USER" },
-                    { "acd820b9-2a6e-43b1-a125-09e72fdc69f7", null, "Admin", "ADMIN" }
+                    { "3dd816c5-4cc9-467e-b5ba-b4a699377ee4", null, "GeneralAdmin", "GENERALADMIN" },
+                    { "d44403ba-8933-47e6-a049-9f5529516067", null, "Admin", "ADMIN" },
+                    { "d72172c9-619e-401f-b400-3298a1b14441", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -323,16 +300,6 @@ namespace Aperta_web_app.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_GeneralAdminInvitations_ClubId",
-                table: "GeneralAdminInvitations",
-                column: "ClubId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GeneralAdminInvitations_RoleId",
-                table: "GeneralAdminInvitations",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
@@ -347,6 +314,11 @@ namespace Aperta_web_app.Migrations
                 name: "IX_UserInvitations_GroupId",
                 table: "UserInvitations",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInvitations_RoleId",
+                table: "UserInvitations",
+                column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -366,9 +338,6 @@ namespace Aperta_web_app.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "GeneralAdminInvitations");
 
             migrationBuilder.DropTable(
                 name: "UserInvitations");

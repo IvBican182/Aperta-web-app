@@ -16,30 +16,9 @@ namespace Aperta_web_app.Controllers
             this._invitationService = invitationService;
             
         }
+
         [HttpGet("verify-invite-token")]
         public async Task<IActionResult> VerifyInviteToken(string token)
-        {
-            // 1. Retrieve invitation details using the token
-            var invitation = await _invitationService.GetAdminInvitationByTokenAsync(token);
-
-            // 2. Check if the invitation is null or expired
-            if (invitation == null || invitation.IsUsed)
-            {
-                return BadRequest(new { message = "Invalid or expired token." });
-            }
-
-            // 3. Return the necessary details to the frontend
-            return Ok(new
-            {
-                Email = invitation.Email,
-                ClubId = invitation.ClubId,
-                RoleId = invitation.RoleId,
-                IsUsed = invitation.IsUsed
-            });
-        }
-
-        [HttpGet("verify-user-invite-token")]
-        public async Task<IActionResult> VerifyUserInviteToken(string token)
         {
             // 1. Retrieve invitation details using the token
             var invitation = await _invitationService.GetUserInvitationByTokenAsync(token);
@@ -56,8 +35,10 @@ namespace Aperta_web_app.Controllers
                 Email = invitation.Email,
                 ClubId = invitation.ClubId,
                 GroupId = invitation.GroupId,
+                RoleId = invitation.RoleId,
                 IsUsed = invitation.IsUsed
             });
         }
+
     }
 }

@@ -9,7 +9,9 @@ namespace Aperta_web_app.Data
         // Foreign key to Club
         public int ClubId { get; set; }
         public Club Club { get; set; }
-        public int GroupId { get; set; }
+        public string RoleId { get; set; }
+        public IdentityRole Role { get; set; }
+        public int? GroupId { get; set; }
         public Group Group { get; set; }
         // Navigation property to Club
         // Foreign key to Identity's Role table, but without navigation property

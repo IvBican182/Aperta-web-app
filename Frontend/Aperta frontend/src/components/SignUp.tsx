@@ -1,6 +1,5 @@
 import { useAppDispatch } from "../Redux/store";
 import { useNavigate } from "react-router";
-import { SignUpFormData } from "../interfaces/interfaces";
 import { useState } from "react";
 import { ChangeEvent } from "react";
 import style from "./AdminSignUp.module.css"
@@ -8,6 +7,7 @@ import { userSignUp } from "../Redux/authSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { useLocation } from "react-router";
+import { ROLE_NAME } from "../config/roles";
 
 
 
@@ -21,16 +21,21 @@ export default function AdminSignUp() {
 
     const token = new URLSearchParams(location.search).get('token');
 
-    const { email, clubId, roleId } = useSelector((state: RootState) => state.invitation);
+    const { isLoading, error } = useSelector((state: RootState) => state.auth);
+
+    const { email, groupId, roleId } = useSelector((state: RootState) => state.invitation);    
 
     const { club } = useSelector((state: RootState) => state.club);
 
     console.log(club);
 
-    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
+        parentFirstName: '',
+        parentLastName: '',
         birthDate: '',
         email: email,
         password: '',
@@ -56,11 +61,16 @@ export default function AdminSignUp() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmed_password) {
-            setPasswordError("Passwords don't match.");
+            setErrorMessage("Passwords don't match.");
             return;
         }
 
-        setPasswordError(null);
+        if (formData.email !== email) {
+            setErrorMessage("Please provide the same email in which you received the invitation!");
+            return;
+        }
+
+        setErrorMessage(null);
 
         const { confirmed_password, ...dataToSubmit } = {
             ...formData,
@@ -69,7 +79,7 @@ export default function AdminSignUp() {
 
         dispatch(userSignUp(dataToSubmit));
 
-        if(club && !club.billingInfo && roleId == "230e7fbd-68ef-4af7-88f5-23b0881419a4") {
+        if(club && !club.billingInfo && roleId == ROLE_NAME.GENERAL_ADMIN) {
             navigate("/onboarding");
         } else {
             navigate('/home');
@@ -110,6 +120,32 @@ export default function AdminSignUp() {
                         />
                     </div>
 
+                    {groupId && 
+                    <>
+                        <div>
+                            <label className={style.label}>Parent First Name:</label>
+                            <input className={style.input}
+                                type="text"
+                                name="parentFirstName"
+                                value={formData.parentFirstName}
+                                onChange={handleChange}
+                                
+                                />
+                        </div>
+
+                        <div>
+                            <label className={style.label}>Parent Last Name:</label>
+                            <input className={style.input}
+                                type="text"
+                                name="parentLastName"
+                                value={formData.parentLastName}
+                                onChange={handleChange}
+                                
+                            />
+                        </div>
+                    </>
+                    }
+
                     <div>
                         <label className={style.label}>Birthday:</label>
                         <input
@@ -122,7 +158,7 @@ export default function AdminSignUp() {
                         />
                     </div>
 
-                    {passwordError && <p className={style.error}>{passwordError}</p>}
+                    {errorMessage && <p className={style.error}>{errorMessage}</p>}
 
                     <div>
                         <label className={style.label}>Email:</label>
@@ -157,8 +193,9 @@ export default function AdminSignUp() {
                         />
                     </div>
 
-                    <button className={style.button} type="submit">SignUp</button>
+                    <button className={style.button} type="submit" disabled={isLoading}>{isLoading ? "Signing up..." : "Sign Up"}</button>
                 </form>
+                {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
         </div>
         

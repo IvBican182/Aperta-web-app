@@ -1,7 +1,13 @@
 ﻿using Aperta_web_app.Models.Registration;
+using Aperta_web_app.Services.Implementations;
 using Aperta_web_app.Services.interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Aperta_web_app.Data;
+using NuGet.Common;
+using System.Data;
 
 namespace Aperta_web_app.Controllers
 {
@@ -10,70 +16,86 @@ namespace Aperta_web_app.Controllers
     public class authController : ControllerBase
     {
         private readonly IInvitationService _invitationService;
-        private readonly IUserService _userService;
+        private readonly IAuthService _userService;
+        private readonly UserManager<User> _userManager;
+        private readonly ITokenService _tokenService;
 
-        public authController(IInvitationService invitationService, IUserService userService)
+        public authController(IInvitationService invitationService, IAuthService userService, UserManager<User> userManager, ITokenService tokenService)
         {
             _invitationService = invitationService;
             _userService = userService;
-            
-        }
-        [HttpPost("api/auth/register")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegistrationDto request)
-        {
-            // Step 1: Validate the invitation token
-            var invitation = await _invitationService.GetAdminInvitationByTokenAsync(request.Token);
-            if (invitation == null || invitation.IsUsed)
-            {
-                return BadRequest(new { message = "Invalid or expired invitation token." });
-            }
+            _userManager = userManager;
+            _tokenService = tokenService;
 
-            // Step 2: Check if the email already exists
-            bool userExists = await _userService.UserExistsAsync(invitation.Email);
-            if (userExists)
-            {
-                return BadRequest(new { message = "Email is already registered." });
-            }
-
-            // Step 3: Proceed with user registration
-            try
-            {
-                var user = await _userService.RegisterAdminAsync(request.Token, request);
-                return Ok(new { message = "Registration successful!" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = $"Failed to register user: {ex.Message}" });
-            }
         }
 
-        [HttpPost("api/auth/registerUser")]
+        [HttpPost("auth/registerUser")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto request)
         {
             // Step 1: Validate the invitation token
             var invitation = await _invitationService.GetUserInvitationByTokenAsync(request.Token);
             if (invitation == null || invitation.IsUsed)
             {
-                return BadRequest(new { message = "Invalid or expired invitation token." });
+                return BadRequest(new 
+                { 
+                    Message = "Invalid or expired invitation token.",
+                    ErrorCode = "InvalidToken"
+                });
+            }
+
+            if (!string.Equals(invitation.Email, request.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new
+                {
+                    Message = "The email does not match the invitation.",
+                    ErrorCode = "EmailMismatch"
+                });
             }
 
             // Step 2: Check if the email already exists
             bool userExists = await _userService.UserExistsAsync(invitation.Email);
             if (userExists)
             {
-                return BadRequest(new { message = "Email is already registered." });
+                return BadRequest(new { Message = "Email is already registered." });
             }
 
             // Step 3: Proceed with user registration
             try
             {
-                var user = await _userService.RegisterUserAsync(request.Token, request);
-                return Ok(new { message = "Registration successful!" });
+                var (user, role) = await _userService.RegisterUserAsync(request.Token, request);
+                var token = await _tokenService.GenerateTokenAsync(user);
+                return Ok(new { user, role, token });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = $"Failed to register user: {ex.Message}" });
+                return BadRequest(new { Message = $"Failed to register user: {ex.Message}" });
             }
+
+            
+        }
+
+        [HttpPost("auth/login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+            {
+                return Unauthorized(
+                    new 
+                    { 
+                        Message = "Invalid email or password.",
+                        ErrorCode = "InvalidEmailorPassword"
+                    });
+            }
+
+            // Retrieve the roles for the user from the AspNetUserRoles table
+            var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+            var token = await _tokenService.GenerateTokenAsync(user);
+
+            return Ok(new { Token = token, Role = role, User = user });
+
+        
         }
     }
 }
