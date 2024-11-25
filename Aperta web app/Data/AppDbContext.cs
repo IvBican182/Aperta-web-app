@@ -32,6 +32,11 @@ namespace Aperta_web_app.Data
                .WithMany(g => g.Users)
                .HasForeignKey(u => u.GroupId);
 
+            modelBuilder.Entity<Group>()
+               .HasOne(u => u.Club)
+               .WithMany(g => g.Groups)
+               .HasForeignKey(u => u.ClubId);
+
             modelBuilder.Entity<UserInvitation>()
                 .HasOne(i => i.Club)
                 .WithMany()                     // Assuming no navigation back to Invitations in Club

@@ -59,7 +59,7 @@ builder.Services.AddSingleton<IEmailService>(provider =>
 
 builder.Services.AddScoped<IInvitationService, InvitationService>();
 builder.Services.AddScoped<IAuthService, authService>();
-
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 
 var apiKey = builder.Configuration["Mailgun:ApiKey"];

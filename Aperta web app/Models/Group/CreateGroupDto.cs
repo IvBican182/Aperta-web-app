@@ -2,5 +2,7 @@
 {
     public class CreateGroupDto : BaseGroupDto
     {
+        public int ClubId { get; set; }
+
     }
 }

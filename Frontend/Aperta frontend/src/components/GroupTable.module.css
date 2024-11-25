@@ -1,0 +1,53 @@
+/* Styling for the container holding the table */
+.tableContainer {
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/* Basic table styling */
+.groupTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header */
+.groupTableHead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Header cells */
+.groupTableHeaderCell {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Table body cells */
+.group-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Add zebra stripes for rows */
+.group-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover effect for rows */
+.group-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsive table for smaller screens */
+@media (max-width: 768px) {
+    .group-table {
+        font-size: 14px;
+    }
+    .group-table th, .group-table td {
+        padding: 8px;
+    }
+}

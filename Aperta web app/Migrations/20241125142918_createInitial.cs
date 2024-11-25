@@ -35,19 +35,6 @@ namespace Aperta_web_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -59,6 +46,47 @@ namespace Aperta_web_app.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Groups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    ClubId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Groups_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,27 +131,6 @@ namespace Aperta_web_app.Migrations
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<string>(type: "text", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -253,9 +260,9 @@ namespace Aperta_web_app.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3dd816c5-4cc9-467e-b5ba-b4a699377ee4", null, "GeneralAdmin", "GENERALADMIN" },
-                    { "d44403ba-8933-47e6-a049-9f5529516067", null, "Admin", "ADMIN" },
-                    { "d72172c9-619e-401f-b400-3298a1b14441", null, "User", "USER" }
+                    { "09c09337-3131-4798-b753-01325f54fc15", null, "User", "USER" },
+                    { "2d99d67b-2caa-4305-8d4c-ccb1b00ccefc", null, "GeneralAdmin", "GENERALADMIN" },
+                    { "cd843459-127c-4433-aade-a923cb94d9e7", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -298,6 +305,11 @@ namespace Aperta_web_app.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_ClubId",
+                table: "Groups",
+                column: "ClubId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -349,10 +361,10 @@ namespace Aperta_web_app.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Clubs");
+                name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "Clubs");
         }
     }
 }

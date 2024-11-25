@@ -4,6 +4,8 @@ import userSliceReducer from "./userSlice";
 import  invitationSliceReducer  from "./invitationSlice";
 import  authSliceReducer  from "./authSlice";
 import clubSliceReducer from "./clubSlice";
+import groupSliceReducer from "./groupSlice";
+import fetchClubMiddleware from './Middleware/fetchClubMiddleware';
 
 //configuring redux store
 const store = configureStore({
@@ -11,9 +13,11 @@ const store = configureStore({
       users: userSliceReducer,
       invitation: invitationSliceReducer,
       auth: authSliceReducer,
-      club: clubSliceReducer
-      
-    }
+      club: clubSliceReducer,
+      group: groupSliceReducer
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(fetchClubMiddleware),
   });
 
 export type RootState = ReturnType<typeof store.getState>;

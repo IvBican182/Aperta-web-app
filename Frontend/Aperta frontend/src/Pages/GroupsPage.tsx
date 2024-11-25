@@ -1,11 +1,13 @@
 import { useAppDispatch } from "../Redux/store"
 import { ChangeEvent, useEffect } from "react";
 import { useState } from "react";
-import { createGroup, getAllGroups } from "../Redux/groupSlice";
+import { createGroup, getGroupsWithUsers } from "../Redux/groupSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { sendUserInvitation } from "../Redux/invitationSlice";
 import { ROLE_ID } from "../config/roles";
+import GroupTable from "../components/GroupTable";
+
 
 
 export default function GroupsPage() {
@@ -19,6 +21,7 @@ export default function GroupsPage() {
 
     console.log(clubId);
     
+    //const { groupsWithUsers, isLoading, error } = useSelector((state: RootState) => state.group);
     
 
     const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
@@ -31,7 +34,11 @@ export default function GroupsPage() {
 
     const fetchGroups = async () => {
         try {
-            const response = await dispatch(getAllGroups()).unwrap(); // Unwrap the fulfilled response
+            if(!clubId) {
+                throw new Error("no club found")
+            }
+            const response = await dispatch(getGroupsWithUsers(clubId)).unwrap(); 
+
             setGroups(response); // Assuming response is an array of groups
         } catch (error) {
             console.error("Failed to fetch groups:", error);
@@ -39,9 +46,10 @@ export default function GroupsPage() {
     };
 
     useEffect(() => {
+        if (!clubId) return; // Don't fetch if clubId is not available
         fetchGroups();
         
-    }, [dispatch])
+    }, [dispatch, clubId])
 
 
     const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -88,11 +96,18 @@ export default function GroupsPage() {
 
     const submitGroup = async () => {
         try {
-            await dispatch(createGroup(formData.groupName)).unwrap(); // Assuming createGroup returns a promise
+            if(!clubId) {
+                throw new Error("no club found")
+            }
+            //await dispatch(createGroup({ groupName: formData.groupName, id: clubId })).unwrap(); // Assuming createGroup returns a promise
             // After the group is created, fetch the groups again or add the new group to state
-            fetchGroups(); // Optionally you could update the state directly like below:
+            //fetchGroups(); // Optionally you could update the state directly like below:
             // setGroups((prevGroups) => [...prevGroups, { id: newId, name: formData.groupName }]);
+            const newGroup = await dispatch(createGroup({ groupName: formData.groupName, id: clubId })).unwrap();
+            
+            fetchGroups(); //Assuming createGroup returns the new group
 
+            setGroups((prevGroups) => [...prevGroups, newGroup]); 
             // Clear the group name input field
             setFormData((prev) => ({ ...prev, groupName: '' }));
         } catch (error) {
@@ -104,6 +119,7 @@ export default function GroupsPage() {
 
 
     return (
+        <>
         <div>
         <p>groups</p>
         <div>
@@ -143,6 +159,11 @@ export default function GroupsPage() {
         <button onClick={handleInvite}>Add player</button>
         
         </div>
+
+        <div>
+            {clubId && <GroupTable clubId={clubId} groups={groups} />}
+        </div>
+        </>
         
     )
 }

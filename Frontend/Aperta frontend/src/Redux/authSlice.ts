@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { SignUpFormData } from "../interfaces/interfaces";
+import { getSingleClub } from "./clubSlice";
 
 interface AuthState {
     user: any | null;
@@ -86,6 +87,7 @@ export const authSlice = createSlice({
             localStorage.removeItem("user");
             localStorage.removeItem("token");
             localStorage.removeItem("role");
+            localStorage.removeItem("club");
           },
     },
     extraReducers(builder) {
@@ -126,6 +128,8 @@ export const authSlice = createSlice({
             localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("token", token);
             localStorage.setItem("role", role);
+
+            
         })
         .addCase(userLogin.rejected, (state, action) => {
             state.isLoading = false;

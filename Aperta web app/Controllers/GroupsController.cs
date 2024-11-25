@@ -9,6 +9,8 @@ using Aperta_web_app.Data;
 using AutoMapper;
 using Aperta_web_app.Contracts;
 using Aperta_web_app.Models.Group;
+using Aperta_web_app.Services.Implementations;
+using Aperta_web_app.Services.interfaces;
 
 namespace Aperta_web_app.Controllers
 {
@@ -18,19 +20,21 @@ namespace Aperta_web_app.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupsRepository _groupsRepository;
+        private readonly IGroupService _groupService;
 
-        public GroupsController(IMapper mapper, IGroupsRepository groupsRepository)
+        public GroupsController(IMapper mapper, IGroupsRepository groupsRepository, IGroupService groupService)
         {
             this._mapper = mapper;
             this._groupsRepository = groupsRepository;
+            this._groupService = groupService;
         }
 
         // GET: api/Groups
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
+        [HttpGet("getClubGroups/{id}")]
+        public async Task<ActionResult<IEnumerable<GroupDto>>> GetClubGroups(int id)
         {
-            var groups = await _groupsRepository.GetAllAsync();
-            var groupRecords = _mapper.Map<List<GetGroupsDto>>(groups);
+            var groups = await _groupService.GetClubGroups(id);
+            var groupRecords = _mapper.Map<List<GroupDto>>(groups);
             return Ok(groupRecords);
         }
 
@@ -90,7 +94,7 @@ namespace Aperta_web_app.Controllers
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("createClubGroup")]
         public async Task<ActionResult<Group>> PostGroup(CreateGroupDto createGroupDto)
         {
             var group = _mapper.Map<Group>(createGroupDto);
@@ -113,6 +117,23 @@ namespace Aperta_web_app.Controllers
 
             return NoContent();
         }
+
+        [HttpGet]
+        [Route("get-groups-with-users/{id}")]
+        public async Task<IActionResult> GetGroupsWithUsers(int id)
+        {
+            try
+            {
+                var groups = await _groupService.GetGroupsWithUsersAsync(id);
+                return Ok(groups);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
 
         private async Task<bool> GroupExists(int id)
         {

@@ -74,11 +74,16 @@ namespace Aperta_web_app.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClubId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
 
                     b.ToTable("Groups");
                 });
@@ -252,19 +257,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3dd816c5-4cc9-467e-b5ba-b4a699377ee4",
+                            Id = "2d99d67b-2caa-4305-8d4c-ccb1b00ccefc",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "d44403ba-8933-47e6-a049-9f5529516067",
+                            Id = "cd843459-127c-4433-aade-a923cb94d9e7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d72172c9-619e-401f-b400-3298a1b14441",
+                            Id = "09c09337-3131-4798-b753-01325f54fc15",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -376,6 +381,17 @@ namespace Aperta_web_app.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Aperta_web_app.Data.Group", b =>
+                {
+                    b.HasOne("Aperta_web_app.Data.Club", "Club")
+                        .WithMany("Groups")
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Club");
+                });
+
             modelBuilder.Entity("Aperta_web_app.Data.User", b =>
                 {
                     b.HasOne("Aperta_web_app.Data.Club", "Club")
@@ -472,6 +488,8 @@ namespace Aperta_web_app.Migrations
 
             modelBuilder.Entity("Aperta_web_app.Data.Club", b =>
                 {
+                    b.Navigation("Groups");
+
                     b.Navigation("Users");
                 });
 

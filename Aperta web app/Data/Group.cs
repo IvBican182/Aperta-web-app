@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aperta_web_app.Data
 {
@@ -9,7 +10,9 @@ namespace Aperta_web_app.Data
 
         public required string Name { get; set; }
 
-        // Navigation property
+        [ForeignKey("Club")]
+        public int ClubId { get; set; }
+        public virtual Club Club { get; set; }
         public ICollection<User> Users { get; set; }
     }
 }
