@@ -8,6 +8,6 @@ export default defineConfig({
     proxy: {
       '/api': 'https://localhost:7147',  // Proxy all requests to /api to the .NET backend
     }
-  }
+  },
 })
 

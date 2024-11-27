@@ -37,6 +37,38 @@ export const createGroup = createAsyncThunk('admin/createGroup', async ({ groupN
     return data; // return the newly created group
 });
 
+export const deleteGroup = createAsyncThunk<
+any,  // Type for the successful payload
+number, // Type for the argument (groupId)
+{ rejectValue: { message: string } }  // Type for the rejected payload
+>("admin/deleteGroup", async (groupId : number, { rejectWithValue }) => {
+    try{
+        const response = await fetch(`https://localhost:7147/api/Groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            return rejectWithValue({ message: data.message });
+          }
+    
+        const data = await response.json();
+        return data; // return the newly created group
+    } 
+    catch (error: any){
+        return rejectWithValue({ message: "Failed to delete the group." });
+    }
+   
+        
+});
+
+
+
+
+
 export const getGroupsWithUsers = createAsyncThunk(
     "admin/getGroupsWithUsers",
     async (clubId: number | null, { rejectWithValue }) => {
@@ -51,6 +83,34 @@ export const getGroupsWithUsers = createAsyncThunk(
         } catch (error: any) {
             console.error(error);
             return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateUserGroup = createAsyncThunk(
+    "admin/updateUserGroup", 
+    async ({ userId , groupId}: { userId: string; groupId: number }, { rejectWithValue }) => {
+        console.log("updateUserGroup async function triggered");
+
+        try {
+            const response = await fetch(`https://localhost:7147/api/Groups/${userId}/group-change`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ groupId: groupId })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log("Updated data for groups:", data);
+            return data;
+        } catch (error: any) {
+            console.error("Error in updateUserGroup:", error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
@@ -86,7 +146,31 @@ const groupSlice = createSlice({
         .addCase(getGroupsWithUsers.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string; // Handle the error
-        });
+        })
+        .addCase(updateUserGroup.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateUserGroup.fulfilled, (state, action) => {
+            state.isLoading = false
+            console.log("updateUserGroup fulfilled", action.payload);
+            // Assuming action.payload contains the updated user and group info.
+            //state.groupsWithUsers = action.payload;
+            state.groupsWithUsers = action.payload;
+        })
+        .addCase(updateUserGroup.rejected, (state, action) => {
+            state.isLoading = false;
+            console.error("updateUserGroup rejected", action.payload);
+            state.error = action.payload as string;;
+        })
+        .addCase(deleteGroup.fulfilled, (state,action) => {
+            state.isLoading = false;
+            state.groupsWithUsers = action.payload;
+
+        })
+        .addCase(deleteGroup.rejected, (state, action) => {
+            state.isLoading = false;
+            //state.error = action.payload?.message  || "Failed to delete group";
+        })
     }
 });
 

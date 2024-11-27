@@ -107,15 +107,20 @@ namespace Aperta_web_app.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
-            var group = await _groupsRepository.GetAsync(id);
-            if (group == null)
+
+            try
             {
-                return NotFound();
+                var groups = await _groupService.DeleteGroupAsync(id);
+                return Ok(groups);
             }
-
-            await _groupsRepository.DeleteAsync(id);    
-
-            return NoContent();
+            catch (InvalidOperationException ex) // Catch specific exceptions
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
@@ -132,6 +137,21 @@ namespace Aperta_web_app.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPut("{userId}/group-change")]
+        public async Task<IActionResult> UpdateUserGroup(string userId,[FromBody] ChangeGroupRequestDto request)
+        {
+            var updatedGroups = await _groupService.UpdateUserGroupAsync(userId, request.GroupId);
+
+            if (updatedGroups == null)
+            {
+                return NotFound(new { Message = "User or Group not found" });
+            }
+
+            return Ok(updatedGroups);
+        }
+
+        
 
 
 

@@ -7,6 +7,7 @@ import { RootState } from "../Redux/store";
 import { sendUserInvitation } from "../Redux/invitationSlice";
 import { ROLE_ID } from "../config/roles";
 import GroupTable from "../components/GroupTable";
+import DeleteGroup from "../components/DeleteGroup";
 
 
 
@@ -158,6 +159,10 @@ export default function GroupsPage() {
         </div>
         <button onClick={handleInvite}>Add player</button>
         
+        </div>
+
+        <div>
+            <DeleteGroup fetchGroups={fetchGroups} groups={groups}/>
         </div>
 
         <div>

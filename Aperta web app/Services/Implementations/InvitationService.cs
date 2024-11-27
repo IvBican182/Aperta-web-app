@@ -71,6 +71,9 @@ namespace Aperta_web_app.Services.Implementations
             _dbContext.UserInvitations.Update(invitation);
             await _dbContext.SaveChangesAsync();
 
+            _dbContext.UserInvitations.Remove(invitation);
+            await _dbContext.SaveChangesAsync();
+
         }
     }
 }

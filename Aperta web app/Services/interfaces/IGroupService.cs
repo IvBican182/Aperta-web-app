@@ -9,6 +9,10 @@ namespace Aperta_web_app.Services.interfaces
 
         Task<List<GroupDto>> GetClubGroups(int clubId);
 
+        Task<List<GroupsWithUsersDto>> UpdateUserGroupAsync(string userId, int groupId);
+
+        Task<List<GroupsWithUsersDto>> DeleteGroupAsync(int groupId);
+
         //Task<Group> PostGroup(CreateGroupDto data);
     }
 }
