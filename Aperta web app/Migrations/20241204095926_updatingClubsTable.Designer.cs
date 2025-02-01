@@ -3,6 +3,7 @@ using System;
 using Aperta_web_app.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aperta_web_app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204095926_updatingClubsTable")]
+    partial class updatingClubsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,6 +65,7 @@ namespace Aperta_web_app.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("StripeId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -260,19 +264,19 @@ namespace Aperta_web_app.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "763c8a70-fbea-4d5a-9791-93ef26859938",
+                            Id = "87193083-ec66-4c08-914c-5df6dafefb2c",
                             Name = "GeneralAdmin",
                             NormalizedName = "GENERALADMIN"
                         },
                         new
                         {
-                            Id = "3dfa4eda-a2d2-455b-b39a-094ff0eee333",
+                            Id = "ee069985-b25c-4094-842b-e12e7ca3bf6b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "34028cde-d220-4c2c-8dec-7327af08557b",
+                            Id = "0974f015-bec1-4614-b7ca-c04a7a0ea97f",
                             Name = "User",
                             NormalizedName = "USER"
                         });

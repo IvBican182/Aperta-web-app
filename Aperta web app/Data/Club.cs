@@ -23,6 +23,8 @@ namespace Aperta_web_app.Data
 
         public required bool BillingInfo { get; set; }  // true or false
 
+        public string? StripeId { get; set; }
+
         public ICollection<User> Users { get; set; }
 
         public ICollection<Group> Groups { get; set; }
