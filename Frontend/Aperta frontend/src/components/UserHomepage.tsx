@@ -3,7 +3,7 @@ import style from "./UserHomepage.module.css";
 
 
 export default function UserHomepage() {
-
+    console.log("bravo tebra");
     
     return (
         <Container className={style.userContainer}>
